@@ -15,8 +15,7 @@ module.exports = function (grunt) {
 
   // Automatically load required grunt tasks
   require('jit-grunt')(grunt, {
-    useminPrepare: 'grunt-usemin',
-     buildcontrol: 'grunt-build-control'
+    useminPrepare: 'grunt-usemin'
   });
 
   // Configurable paths
@@ -30,21 +29,7 @@ module.exports = function (grunt) {
 
     // Project settings
     config: config,
-    
-    buildcontrol: {
-      options: {
-        dir: 'dist',
-        commit: true,
-        push: true,
-        message: 'Built %sourceName% from commit %sourceCommit% on branch %sourceBranch%'
-      },
-      pages: {
-        options: {
-          remote: 'git@github.com:matthewborda/MovieAngularApp.git',
-          branch: 'gh-pages'
-        }
-      }
-    },
+
     // Watches files for changes and runs tasks based on the changed files
     watch: {
       bower: {
@@ -63,8 +48,8 @@ module.exports = function (grunt) {
         files: ['Gruntfile.js']
       },
       sass: {
-         files: ['<%= yeoman.app %>/styles/{,*/}*.{scss,sass}'],
-    tasks: ['sass:server', 'autoprefixer']
+        files: ['<%= config.app %>/styles/{,*/}*.{scss,sass}'],
+        tasks: ['sass', 'postcss']
       },
       styles: {
         files: ['<%= config.app %>/styles/{,*/}*.css'],
@@ -181,31 +166,23 @@ module.exports = function (grunt) {
     },
 
     // Compiles Sass to CSS and generates necessary files if requested
-   sass: {
-    options: {
-        includePaths: [
-            'bower_components'
-        ]
-    },
-    dist: {
+    sass: {
+      options: {
+        sourceMap: true,
+        sourceMapEmbed: true,
+        sourceMapContents: true,
+        includePaths: ['.']
+      },
+      dist: {
         files: [{
-            expand: true,
-            cwd: '<%= yeoman.app %>/styles',
-            src: ['*.scss'],
-            dest: '.tmp/styles',
-            ext: '.css'
+          expand: true,
+          cwd: '<%= config.app %>/styles',
+          src: ['*.{scss,sass}'],
+          dest: '.tmp/styles',
+          ext: '.css'
         }]
+      }
     },
-    server: {
-        files: [{
-            expand: true,
-            cwd: '<%= yeoman.app %>/styles',
-            src: ['*.scss'],
-            dest: '.tmp/styles',
-            ext: '.css'
-        }]
-    }
-},
 
     postcss: {
       options: {
@@ -395,37 +372,21 @@ module.exports = function (grunt) {
     },
 
     // Run some tasks in parallel to speed up build process
-//     concurrent: {
-//       server: [
-//         'babel:dist',
-//         'sass'
-//       ],
-//       test: [
-//         'babel'
-//       ],
-//       dist: [
-//         'babel',
-//         'sass',
-//         'imagemin',
-//         'svgmin'
-//       ]
-//     }
-//   }
     concurrent: {
-  server: [
-    'sass:server',
-    'copy:styles'
-  ],
-  test: [
-    'copy:styles'
-  ],
-  dist: [
-    'sass',
-    'copy:styles',
-    'imagemin',
-    'svgmin'
-  ]
-}     
+      server: [
+        'babel:dist',
+        'sass'
+      ],
+      test: [
+        'babel'
+      ],
+      dist: [
+        'babel',
+        'sass',
+        'imagemin',
+        'svgmin'
+      ]
+    }
   });
 
 
