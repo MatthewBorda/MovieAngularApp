@@ -1,5 +1,8 @@
 <div ng-app class="jumbotron" ng-controller="MainCtrl">
-  <h1>{{current.results[0].original_title}}</h1>
+<!--   <h1>{{current.results[0].original_title}}</h1> -->
+    <h1>{{moviesearch.results[0].original_title}}
+     Total Movies {{moviesearch.total_results}}
+</h1>
   <p class="lead">
     <div ng-init="movieName='Seattle'">
         <p>
@@ -9,14 +12,30 @@
         </p>
         <p>
           <button class="btn btn-lg btn-primary" ng-click="refreshCurrent()">Search</button>
-        </p>
-      <dl>
+
+<!--       <dl>
         <dt>Overview</dt>
         <dd>{{current.results[0].overview}}</dd>
         <dt>Release Date</dt>
         <dd>{{current.results[0].release_date}}</dd>
-       
+   
+      </dl> -->
+  
+    
+
+       <div ng-if="searchQuery">
+     <p class="lead">{{moviesearch.total_results}} cities found matching the query: {{searchQuery}}.</p>
+      <dl ng-repeat="total_results in moviesFound.list">
+        <dt>{{original_title}}</dt>
+        <dd>{{city.weather[0].main}} - {{city.weather[0].description}}</dd>
+        <dt>Temperature</dt>
+        <dd>{{city.main.temp}} &deg;F asd </dd>
+        <dd><a ng-href="/#/current/{{city.id}}" class="btn btn-lg btn-primary">View Weather</a></dd>
       </dl>
+               </p>
     </div>
-  </p>
+  
+    </div>
+      
+
 </div>
