@@ -16,12 +16,14 @@ module.exports = function (grunt) {
   // Automatically load required grunt tasks
   require('jit-grunt')(grunt, {
     useminPrepare: 'grunt-usemin',
+    ngtemplates: 'grunt-angular-templates',
+    cdnify: 'grunt-google-cdn',
      buildcontrol: 'grunt-build-control'
   });
 
   // Configurable paths
   var config = {
-    app: 'app',
+   app: require('./bower.json').appPath || 'app',
     dist: 'dist'
   };
 
