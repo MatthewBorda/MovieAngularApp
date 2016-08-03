@@ -408,7 +408,7 @@ concurrent: {
   ],
   dist: [
     'sass',
-    'copy:styles',
+    //'copy:styles',
     'imagemin',
     'svgmin'
   ]
