@@ -64,7 +64,7 @@ module.exports = function (grunt) {
       },
       sass: {
         files: ['<%= config.app %>/styles/{,*/}*.{scss,sass}'],
-        tasks: ['sass', 'postcss']
+        tasks: ['sass:server', 'postcss']
       },
       styles: {
         files: ['<%= config.app %>/styles/{,*/}*.css'],
@@ -186,7 +186,8 @@ module.exports = function (grunt) {
         sourceMap: true,
         sourceMapEmbed: true,
         sourceMapContents: true,
-        includePaths: ['.']
+        includePaths: ['bower_components'],
+          
       },
       dist: {
         files: [{
@@ -195,8 +196,18 @@ module.exports = function (grunt) {
           src: ['*.{scss,sass}'],
           dest: '.tmp/styles',
           ext: '.css'
+          
         }]
-      }
+      },
+        server: {
+        files: [{
+            expand: true,
+            cwd: '<%= config.app %>/styles',
+            src: ['*.scss'],
+            dest: '.tmp/styles',
+            ext: '.css'
+        }]
+    }
     },
 
     postcss: {
@@ -387,21 +398,21 @@ module.exports = function (grunt) {
     },
 
     // Run some tasks in parallel to speed up build process
-    concurrent: {
-      server: [
-        'babel:dist',
-        'sass'
-      ],
-      test: [
-        'babel'
-      ],
-      dist: [
-        'babel',
-        'sass',
-        'imagemin',
-        'svgmin'
-      ]
-    }
+concurrent: {
+  server: [
+    'sass:server'
+    //'copy:styles'
+  ],
+  test: [
+    'copy:styles'
+  ],
+  dist: [
+    'sass',
+    'copy:styles',
+    'imagemin',
+    'svgmin'
+  ]
+},
   });
 
 
