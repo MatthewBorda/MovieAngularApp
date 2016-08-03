@@ -63,8 +63,8 @@ module.exports = function (grunt) {
         files: ['Gruntfile.js']
       },
       sass: {
-        files: ['<%= config.app %>/styles/{,*/}*.{scss,sass}'],
-        tasks: ['sass', 'postcss']
+         files: ['<%= yeoman.app %>/styles/{,*/}*.{scss,sass}'],
+    tasks: ['sass:server', 'autoprefixer']
       },
       styles: {
         files: ['<%= config.app %>/styles/{,*/}*.css'],
@@ -181,23 +181,31 @@ module.exports = function (grunt) {
     },
 
     // Compiles Sass to CSS and generates necessary files if requested
-    sass: {
-      options: {
-        sourceMap: true,
-        sourceMapEmbed: true,
-        sourceMapContents: true,
-        includePaths: ['.']
-      },
-      dist: {
-        files: [{
-          expand: true,
-          cwd: '<%= config.app %>/styles',
-          src: ['*.{scss,sass}'],
-          dest: '.tmp/styles',
-          ext: '.css'
-        }]
-      }
+   sass: {
+    options: {
+        includePaths: [
+            'bower_components'
+        ]
     },
+    dist: {
+        files: [{
+            expand: true,
+            cwd: '<%= yeoman.app %>/styles',
+            src: ['*.scss'],
+            dest: '.tmp/styles',
+            ext: '.css'
+        }]
+    },
+    server: {
+        files: [{
+            expand: true,
+            cwd: '<%= yeoman.app %>/styles',
+            src: ['*.scss'],
+            dest: '.tmp/styles',
+            ext: '.css'
+        }]
+    }
+},
 
     postcss: {
       options: {
@@ -387,21 +395,37 @@ module.exports = function (grunt) {
     },
 
     // Run some tasks in parallel to speed up build process
+//     concurrent: {
+//       server: [
+//         'babel:dist',
+//         'sass'
+//       ],
+//       test: [
+//         'babel'
+//       ],
+//       dist: [
+//         'babel',
+//         'sass',
+//         'imagemin',
+//         'svgmin'
+//       ]
+//     }
+//   }
     concurrent: {
-      server: [
-        'babel:dist',
-        'sass'
-      ],
-      test: [
-        'babel'
-      ],
-      dist: [
-        'babel',
-        'sass',
-        'imagemin',
-        'svgmin'
-      ]
-    }
+  server: [
+    'sass:server',
+    'copy:styles'
+  ],
+  test: [
+    'copy:styles'
+  ],
+  dist: [
+    'sass',
+    'copy:styles',
+    'imagemin',
+    'svgmin'
+  ]
+}     
   });
 
 
